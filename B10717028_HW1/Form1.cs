@@ -33,7 +33,7 @@ namespace B10717028_HW1
             if (sfd.ShowDialog() != DialogResult.OK) return;
 
             var s = new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            var os = new FileStream(sfd.FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
+            var os = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write, FileShare.Read);
             while (s.Position<s.Length)
             {
                 char c = (char)s.ReadByte();
