@@ -28,26 +28,39 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.buttonOpen = new System.Windows.Forms.Button();
+            this.buttonEncrypt = new System.Windows.Forms.Button();
+            this.buttonDecrypt = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // buttonOpen
+            // buttonEncrypt
             // 
-            this.buttonOpen.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.buttonOpen.Location = new System.Drawing.Point(12, 12);
-            this.buttonOpen.Name = "buttonOpen";
-            this.buttonOpen.Size = new System.Drawing.Size(120, 51);
-            this.buttonOpen.TabIndex = 0;
-            this.buttonOpen.Text = "開啟檔案";
-            this.buttonOpen.UseVisualStyleBackColor = true;
-            this.buttonOpen.Click += new System.EventHandler(this.buttonOpen_Click);
+            this.buttonEncrypt.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.buttonEncrypt.Location = new System.Drawing.Point(12, 12);
+            this.buttonEncrypt.Name = "buttonEncrypt";
+            this.buttonEncrypt.Size = new System.Drawing.Size(75, 23);
+            this.buttonEncrypt.TabIndex = 0;
+            this.buttonEncrypt.Text = "加密";
+            this.buttonEncrypt.UseVisualStyleBackColor = true;
+            this.buttonEncrypt.Click += new System.EventHandler(this.buttonEncrypt_Click);
+            // 
+            // buttonDecrypt
+            // 
+            this.buttonDecrypt.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.buttonDecrypt.Location = new System.Drawing.Point(93, 12);
+            this.buttonDecrypt.Name = "buttonDecrypt";
+            this.buttonDecrypt.Size = new System.Drawing.Size(75, 23);
+            this.buttonDecrypt.TabIndex = 1;
+            this.buttonDecrypt.Text = "解密";
+            this.buttonDecrypt.UseVisualStyleBackColor = true;
+            this.buttonDecrypt.Click += new System.EventHandler(this.buttonDecrypt_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(144, 75);
-            this.Controls.Add(this.buttonOpen);
+            this.ClientSize = new System.Drawing.Size(183, 44);
+            this.Controls.Add(this.buttonDecrypt);
+            this.Controls.Add(this.buttonEncrypt);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "Form1";
@@ -59,7 +72,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Button buttonOpen;
+        private System.Windows.Forms.Button buttonEncrypt;
+        private System.Windows.Forms.Button buttonDecrypt;
     }
 }
 

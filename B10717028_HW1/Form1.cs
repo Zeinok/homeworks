@@ -18,7 +18,8 @@ namespace B10717028_HW1
         {
             InitializeComponent();
         }
-        private void buttonOpen_Click(object sender, EventArgs e)
+
+        private void doShifting(int shift)
         {
             var ofd = new OpenFileDialog
             {
@@ -34,34 +35,62 @@ namespace B10717028_HW1
 
             var s = new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var os = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write, FileShare.Read);
-            while (s.Position<s.Length)
+            while (s.Position < s.Length)
             {
                 char c = (char)s.ReadByte();
                 if (c >= 'A' && c <= 'Z' ||
                     c >= 'a' && c <= 'z' ||
                     c >= '0' && c <= '9')
                 {
-                    byte cc = (byte)c;
-                    cc += 5;
-                    if(c >= '0' && c <= '9' && cc > '9')
+                    int cc = (byte)c;
+                    cc += shift;
+                    if (shift > 0)
                     {
-                        cc -= 10;
+                        if (c >= '0' && c <= '9' && cc > '9')
+                        {
+                            cc -= 10;
+                        }
+                        if (c >= 'A' && c <= 'Z' && cc > 'Z')
+                        {
+                            cc -= 26;
+                        }
+                        if (c >= 'a' && c <= 'z' && cc > 'z')
+                        {
+                            cc -= 26;
+                        }
                     }
-                    if (c >= 'A' && c <= 'Z' && cc > 'Z')
+                    else
                     {
-                        cc -= 26;
+                        if (c >= '0' && c <= '9' && cc < '0')
+                        {
+                            cc += 10;
+                        }
+                        if (c >= 'A' && c <= 'Z' && cc < 'A')
+                        {
+                            cc += 26;
+                        }
+                        if (c >= 'a' && c <= 'z' && cc < 'a')
+                        {
+                            cc += 26;
+                        }
                     }
-                    if (c >= 'a' && c <= 'z' && cc > 'z')
-                    {
-                        cc -= 26;
-                    }
-                    os.WriteByte(cc);
+                    os.WriteByte((byte)cc);
                 }
                 else os.WriteByte((byte)c);
             }
             os.Close();
             s.Close();
             MessageBox.Show("處理成功。", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void buttonEncrypt_Click(object sender, EventArgs e)
+        {
+            doShifting(5);
+        }
+
+        private void buttonDecrypt_Click(object sender, EventArgs e)
+        {
+            doShifting(-5);
         }
     }
 }
