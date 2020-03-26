@@ -1,4 +1,4 @@
-﻿namespace ShiftingEncrypt
+﻿namespace B10717028_HW1
 {
     partial class Form1
     {

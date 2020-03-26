@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 using System.IO;
 
-namespace ShiftingEncrypt
+namespace B10717028_HW1
 {
     public partial class Form1 : Form
     {
