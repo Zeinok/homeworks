@@ -22,6 +22,7 @@ namespace B10717028_HW2
             X = p.X;
             Y = p.Y;
         }
+
         public void AddNextPoint(LinkedPoint point) {
             if(point == this) return;
             if(!LinkedPoints.Contains(point)) LinkedPoints.Add(point);

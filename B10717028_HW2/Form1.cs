@@ -22,25 +22,53 @@ namespace B10717028_HW2
             
         }
 
+        bool isLooped(LinkedPoint firstPoint, LinkedPoint currentPoint, List<LinkedPoint> remainPoints, List<LinkedPoint> passedPoints) {
+            if(remainPoints.Count == 0) return false;
+
+            remainPoints.Remove(currentPoint);
+            //if(passedPoints.Count == 0) passedPoints.Add(currentPoint);
+            
+            foreach(var p in currentPoint.GetLinkedPoints()) {
+                if(p!=firstPoint) p.RemoveNextPoint(currentPoint);
+                if(passedPoints.Contains(p)) return true;
+                passedPoints.Add(p);
+                if(isLooped(firstPoint, p, remainPoints, passedPoints)) 
+                    return true;
+
+                
+                //passedPoints.Add(p);
+            }
+            
+            if(remainPoints.Count == 0) return false;
+            return isLooped(firstPoint, remainPoints[0], remainPoints, passedPoints);
+            return false;
+        }
+
         private void timer1_Tick(object sender, EventArgs e) {
             //planarGraph1.Focus();
             statusStrip1.Text = "";
-            bool loopFlag = false;
-            List<LinkedPoint> points = new List<LinkedPoint>();
             
-            foreach(var p in planarGraph1.Points) {
-                if(points.Count == 0) points.Add(p);
-                foreach(var np in p.GetLinkedPoints()) {
-                    if(points.Contains(np)) {
-                        loopFlag = true;
-                        break;
+            List<LinkedPoint> remainPoints = planarGraph1.Points.ToList();
+            List<LinkedPoint> passedPoints = new List<LinkedPoint>();
+            bool loopFlag = false;
+            if(remainPoints.Count > 0)
+                loopFlag = isLooped(remainPoints[0], remainPoints[0], remainPoints, passedPoints);
+
+
+/*            if(remainPoints.Count > 0) {
+                LinkedPoint currentPoint = remainPoints[0];
+                while(true) {
+                    foreach(var p in remainPoints) {
+
                     }
-                    points.Add(np);
+                    remainPoints.Remove(currentPoint);
+                    passedPoints.Add(currentPoint);
+
+
                 }
-                if(loopFlag) break;
-                
-            }
-            toolStripStatusLabel1.Text = String.Format("{0} Points {1}", points.Count, loopFlag ? "Loop detected!" : ""); 
+            }*/
+
+            toolStripStatusLabel1.Text = String.Format("{0} Points {1}", planarGraph1.Points.Length, loopFlag ? "Loop detected!" : ""); 
             if(loopFlag) { 
                 if(checkBoxMsgBox.Checked && messageBoxShown == false) {
                     messageBoxShown = true;

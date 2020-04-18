@@ -59,7 +59,7 @@
             // checkBoxMsgBox
             // 
             this.checkBoxMsgBox.AutoSize = true;
-            this.checkBoxMsgBox.Location = new System.Drawing.Point(227, 16);
+            this.checkBoxMsgBox.Location = new System.Drawing.Point(90, 16);
             this.checkBoxMsgBox.Margin = new System.Windows.Forms.Padding(0);
             this.checkBoxMsgBox.Name = "checkBoxMsgBox";
             this.checkBoxMsgBox.Size = new System.Drawing.Size(112, 16);

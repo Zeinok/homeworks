@@ -32,7 +32,7 @@ namespace B10717028_HW2
         Brush pointBrush = new SolidBrush(Color.DarkRed);
         Pen pointPen = new Pen(Color.Black, 1);
         Pen pointPenSelected = new Pen(Color.Red, 1);
-        int pointWidth = 8;
+        int pointWidth = 10;
 
         public PlanarGraph() {
             InitializeComponent();
@@ -57,22 +57,25 @@ namespace B10717028_HW2
             return (Math.Abs(location.X - point.X) < hitboxWidth && Math.Abs(location.Y - point.Y) < hitboxWidth);
         }
 
-        private void updateGraph() {
+        private void updateGraph() { 
             Bitmap bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
             Graphics g = Graphics.FromImage(bitmap);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             foreach(var p in linkedPoints) {
-                Point point = new Point(p.X, p.Y);
                 foreach(var np in p.GetLinkedPoints()) {
                     g.DrawLine(linePen, p.GetPointStruct(), np.GetPointStruct());
                 }
+            }
+            foreach(var p in linkedPoints) {
                 RectangleF rectF = GetPointRectangleF(p.GetPointStruct());
                 g.FillEllipse(pointBrush, rectF);
                 g.DrawEllipse(pointPen, rectF);
             }
             pictureBox.Image = bitmap;
+            pictureBox.Invalidate();
         }
         private void pictureBox_Paint(object sender, PaintEventArgs e) {
-
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             e.Graphics.DrawLine(Pens.Black, new Point(currentMouseLocation.X, 0), new Point(currentMouseLocation.X, this.Height));
             e.Graphics.DrawLine(Pens.Black, new Point(0, currentMouseLocation.Y), new Point(this.Width, currentMouseLocation.Y));
 
@@ -126,26 +129,20 @@ namespace B10717028_HW2
             }
         }
 
-        private void PlanarGraph_MouseDown(object sender, MouseEventArgs e) {
-
-        }
-
-        private void PlanarGraph_MouseUp(object sender, MouseEventArgs e) {
-
-        }
-
         private void pictureBox_MouseUp(object sender, MouseEventArgs e) {
             if(CurrentEditMode == EditMode.ReadOnly) return;
 
             if(e.Button == MouseButtons.Right) return;
             bool doUpdateGraph = false;
-            bool notDragging = (mouseDownLocation.X == e.Location.X) && (mouseDownLocation.Y == e.Location.Y);
+            bool notDragging = Math.Abs(mouseDownLocation.X - e.Location.X) < pointWidth/2 && Math.Abs(mouseDownLocation.Y - e.Location.Y) < pointWidth/2;
             //
 
             //
             if(CurrentEditMode == EditMode.AddLine && selectedPoint != null) { // add line
-                if(!hoveredPoint.GetLinkedPoints().Contains(selectedPoint))
+                if(!hoveredPoint.GetLinkedPoints().Contains(selectedPoint)) {
                     selectedPoint.AddNextPoint(hoveredPoint);
+                    hoveredPoint.AddNextPoint(selectedPoint);
+                }
                 hoveredPoint = null;
                 doUpdateGraph = true;
             }
