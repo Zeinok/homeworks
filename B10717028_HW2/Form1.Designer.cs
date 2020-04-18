@@ -59,6 +59,8 @@
             // checkBoxMsgBox
             // 
             this.checkBoxMsgBox.AutoSize = true;
+            this.checkBoxMsgBox.Checked = true;
+            this.checkBoxMsgBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxMsgBox.Location = new System.Drawing.Point(90, 16);
             this.checkBoxMsgBox.Margin = new System.Windows.Forms.Padding(0);
             this.checkBoxMsgBox.Name = "checkBoxMsgBox";
@@ -98,7 +100,7 @@
             this.Controls.Add(this.statusStrip1);
             this.KeyPreview = true;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Click on point and drag to draw a line ,Click on point and press [Del] to delete";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);

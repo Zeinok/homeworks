@@ -69,7 +69,7 @@ namespace B10717028_HW2
             }*/
 
             toolStripStatusLabel1.Text = String.Format("{0} Points {1}", planarGraph1.Points.Length, loopFlag ? "Loop detected!" : ""); 
-            if(loopFlag) { 
+            if(loopFlag) {
                 if(checkBoxMsgBox.Checked && messageBoxShown == false) {
                     messageBoxShown = true;
                     MessageBox.Show("Loop detected!");
