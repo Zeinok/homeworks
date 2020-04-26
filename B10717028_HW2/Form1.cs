@@ -31,17 +31,16 @@ namespace B10717028_HW2
             foreach(var p in currentPoint.GetLinkedPoints()) {
                 if(p!=firstPoint) p.RemoveNextPoint(currentPoint);
                 if(passedPoints.Contains(p)) return true;
-                passedPoints.Add(p);
+                
                 if(isLooped(firstPoint, p, remainPoints, passedPoints)) 
                     return true;
 
-                
+                passedPoints.Add(p);
                 //passedPoints.Add(p);
             }
             
             if(remainPoints.Count == 0) return false;
             return isLooped(firstPoint, remainPoints[0], remainPoints, passedPoints);
-            return false;
         }
 
         private void timer1_Tick(object sender, EventArgs e) {
