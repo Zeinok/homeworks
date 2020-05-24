@@ -100,7 +100,7 @@ namespace PruneAndSearch
             }
             appendText(new string('-', 10));
             State s = pruneAndSearch_Step(nextK, (int)comboBoxPval.SelectedItem, elements);
-            appendText(string.Format("K = {0}, K' = {1} , P = {2}", comboBoxK.SelectedItem, nextK, comboBoxP.SelectedItem));
+            appendText(string.Format("K = {0}, P = {2}", comboBoxK.SelectedItem, comboBoxP.SelectedItem));
             appendText(string.Format("S1 = {{{0}}} {1}", string.Join(", ", s.S1), s.SetLeft == State.Set.S1 ? "保留" : "刪除"));
             appendText(string.Format("S2 = {{{0}}} {1}", string.Join(", ", s.S2), s.SetLeft == State.Set.S2 ? "保留" : "刪除"));
             appendText(string.Format("S3 = {{{0}}} {1}", string.Join(", ", s.S3), s.SetLeft == State.Set.S3 ? "保留" : "刪除"));
