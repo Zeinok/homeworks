@@ -37,6 +37,7 @@
             this.comboBoxP = new System.Windows.Forms.ComboBox();
             this.labelEqu = new System.Windows.Forms.Label();
             this.comboBoxPval = new System.Windows.Forms.ComboBox();
+            this.buttonReset = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -114,6 +115,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.buttonReset);
             this.splitContainer1.Panel1.Controls.Add(this.comboBoxPval);
             this.splitContainer1.Panel1.Controls.Add(this.labelEqu);
             this.splitContainer1.Panel1.Controls.Add(this.buttonStep);
@@ -169,6 +171,16 @@
             this.comboBoxPval.TabIndex = 9;
             this.comboBoxPval.SelectedIndexChanged += new System.EventHandler(this.comboBoxPval_SelectedIndexChanged);
             // 
+            // buttonReset
+            // 
+            this.buttonReset.Location = new System.Drawing.Point(310, 6);
+            this.buttonReset.Name = "buttonReset";
+            this.buttonReset.Size = new System.Drawing.Size(75, 23);
+            this.buttonReset.TabIndex = 10;
+            this.buttonReset.Text = "Reset";
+            this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -177,7 +189,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Prune and Search";
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -204,6 +216,7 @@
         private System.Windows.Forms.Button buttonStep;
         private System.Windows.Forms.ComboBox comboBoxPval;
         private System.Windows.Forms.Label labelEqu;
+        private System.Windows.Forms.Button buttonReset;
     }
 }
 

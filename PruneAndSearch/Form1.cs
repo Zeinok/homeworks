@@ -14,6 +14,7 @@ namespace PruneAndSearch
 {
     public partial class Form1 : Form
     {
+        private string currentFile = "";
         private List<int> elements = new List<int>();
         private int nextK = 0;
         public Form1() {
@@ -49,36 +50,10 @@ namespace PruneAndSearch
         }
 
         private void toolStripButtonOpen_Click(object sender, EventArgs e) {
-            try {
-                var ofd = new OpenFileDialog();
-                if(ofd.ShowDialog() != DialogResult.OK) return;
-                elements.Clear();
-                var s = new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                var sr = new StreamReader(s);
-                string text = sr.ReadToEnd();
-                foreach(var val in text.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)) {
-                    elements.Add(int.Parse(val));
-                }
-                comboBoxK.Enabled = true;
-                buttonStep.Enabled = true;
-                comboBoxK.Items.Clear();
-                comboBoxP.Items.Clear();
-                comboBoxPval.Items.Clear();
-                for(int i = 0; i < elements.Count; i++) {
-                    comboBoxK.Items.Add(i+1);
-                    comboBoxP.Items.Add(i+1);
-                    comboBoxPval.Items.Add(elements[i]);
-                }
-                comboBoxK.SelectedIndex = 0;
-                comboBoxP.SelectedIndex = 0;
-                comboBoxPval.SelectedIndex = 0;
-                textBoxLog.Clear();
-                StringBuilder sb = new StringBuilder("S = ");
-                sb.AppendFormat("{{{0}}}", string.Join(", ", elements.ToArray()));
-                appendText(sb.ToString());
-            } catch(Exception ex) {
-                MessageBox.Show(ex.ToString(), ex.Message);
-            }
+            var ofd = new OpenFileDialog();
+            if(ofd.ShowDialog() != DialogResult.OK) return;
+            currentFile = ofd.FileName;
+            pruneAndSearch_Init();
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e) {
@@ -100,7 +75,7 @@ namespace PruneAndSearch
             }
             appendText(new string('-', 10));
             State s = pruneAndSearch_Step(nextK, (int)comboBoxPval.SelectedItem, elements);
-            appendText(string.Format("K = {0}, P = {2}", comboBoxK.SelectedItem, comboBoxP.SelectedItem));
+            appendText(string.Format("K = {0}, P = {1}", comboBoxK.SelectedItem, comboBoxP.SelectedItem));
             appendText(string.Format("S1 = {{{0}}} {1}", string.Join(", ", s.S1), s.SetLeft == State.Set.S1 ? "保留" : "刪除"));
             appendText(string.Format("S2 = {{{0}}} {1}", string.Join(", ", s.S2), s.SetLeft == State.Set.S2 ? "保留" : "刪除"));
             appendText(string.Format("S3 = {{{0}}} {1}", string.Join(", ", s.S3), s.SetLeft == State.Set.S3 ? "保留" : "刪除"));
@@ -122,7 +97,37 @@ namespace PruneAndSearch
                 buttonStep.Enabled = false;
             }
         }
-
+        private void pruneAndSearch_Init() {
+            if(currentFile == "") return;
+            try {
+                elements.Clear();
+                var s = new FileStream(currentFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                var sr = new StreamReader(s);
+                string text = sr.ReadToEnd();
+                foreach(var val in text.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)) {
+                    elements.Add(int.Parse(val));
+                }
+                comboBoxK.Enabled = true;
+                buttonStep.Enabled = true;
+                comboBoxK.Items.Clear();
+                comboBoxP.Items.Clear();
+                comboBoxPval.Items.Clear();
+                for(int i = 0; i < elements.Count; i++) {
+                    comboBoxK.Items.Add(i + 1);
+                    comboBoxP.Items.Add(i + 1);
+                    comboBoxPval.Items.Add(elements[i]);
+                }
+                comboBoxK.SelectedIndex = 0;
+                comboBoxP.SelectedIndex = 0;
+                comboBoxPval.SelectedIndex = 0;
+                textBoxLog.Clear();
+                StringBuilder sb = new StringBuilder("S = ");
+                sb.AppendFormat("{{{0}}}", string.Join(", ", elements.ToArray()));
+                appendText(sb.ToString());
+            } catch(Exception ex) {
+                MessageBox.Show(ex.ToString(), ex.Message);
+            }
+        }
         private State pruneAndSearch_Step(int k, int pVal, List<int> Set) {
             List<int> lessThan = new List<int>();
             List<int> equals = new List<int>();
@@ -155,5 +160,8 @@ namespace PruneAndSearch
             comboBoxP.SelectedIndex = comboBoxPval.SelectedIndex;
         }
 
+        private void buttonReset_Click(object sender, EventArgs e) {
+            pruneAndSearch_Init();
+        }
     }
 }
