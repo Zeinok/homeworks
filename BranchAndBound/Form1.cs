@@ -68,7 +68,6 @@ namespace BranchAndBound
             currentStatus = CurrentStatus.FindLowestBound;
             solution.Clear();
         }
-
         private void toolStripButtonStep_Click(object sender, EventArgs e) {
             if(TSPMatrix == null) return;
             appendLog(currentStatus.ToString() + "()");
@@ -95,7 +94,6 @@ namespace BranchAndBound
             if(currentStatus != CurrentStatus.Finish)
                 currentStatus = (CurrentStatus)((int)++currentStatus % (int)CurrentStatus.Finish);
         }
-
         private void appendLog(string s) {
             richTextBox1.AppendText(string.Format("{0}\n", s));
             richTextBox1.SelectionStart = richTextBox1.TextLength-1;
@@ -133,6 +131,9 @@ namespace BranchAndBound
                     g.DrawRectangle(Pens.Black, new Rectangle(x * cellSize, y * cellSize, cellSize, cellSize));
                     if(skippedRow.Contains(x)) continue;
                     if(skippedCol.Contains(y)) continue;
+                    if(currentStatus == CurrentStatus.Finish)
+                        if(float.IsInfinity(TSPMatrix[x, y]))
+                            continue;
                     var sSize = g.MeasureString(TSPMatrix[x, y].ToString(), cellFont);
                     g.DrawString(
                         TSPMatrix[x, y].ToString(),
@@ -147,7 +148,6 @@ namespace BranchAndBound
             pictureBox1.Image = new Bitmap(bmp);
             bmp.Dispose();
         }
-
         private void LoopStart() {
             // check if matrix is empty
             Console.WriteLine("TSP infinity = {0}", TSPMatrix.Cast<float>().Where(e => float.IsInfinity(e)).Count());
@@ -157,7 +157,7 @@ namespace BranchAndBound
                 StringBuilder sb = new StringBuilder("Solution: ");
                 Dictionary<int, int> swappedSolution = solution.ToDictionary(v => v.Value, k => k.Key);
                 int nextValue = swappedSolution.Keys.Min();
-                sb.Append(nextValue);
+                sb.Append(nextValue + 1);
                 float totalCost = 0;
                 while(swappedSolution.Count > 0) {
                     sb.AppendFormat("->{0}", swappedSolution[nextValue] + 1);
@@ -181,7 +181,8 @@ namespace BranchAndBound
                                     ).Min();
                 for(int x = 0; x < tempTSPMatrix.GetLength(0); x++)
                     if(!float.IsInfinity(tempTSPMatrix[x, y])) tempTSPMatrix[x, y] -= yLowestBound[y];
-                appendLog(string.Format("LB for Y:{0}={1}", y, yLowestBound[y]));
+                if(yLowestBound[y]!=0&&!float.IsInfinity(yLowestBound[y]))
+                    appendLog(string.Format("LB for Y:{0}={1}", y, yLowestBound[y]));
             }
 
             for(int x = 0; x < tempTSPMatrix.GetLength(0); x++) {
@@ -191,7 +192,8 @@ namespace BranchAndBound
                                     ).Min();
                 for(int y = 0; y < tempTSPMatrix.GetLength(1); y++)
                     if(!float.IsInfinity(tempTSPMatrix[x, y])) tempTSPMatrix[x, y] -= xLowestBound[x];
-                appendLog(string.Format("LB for X:{0}={1}", x, xLowestBound[x]));
+                if(xLowestBound[x] != 0 && !float.IsInfinity(xLowestBound[x]))
+                    appendLog(string.Format("LB for X:{0}={1}", x, xLowestBound[x]));
             }
             nextTSPMatrix = tempTSPMatrix;
         }
@@ -223,7 +225,6 @@ namespace BranchAndBound
             }
             if(maxCoord.X != -1)
                 coordinateReadyToRemove = maxCoord;
-
         }
         private void MakeColRowInfinite() {
             if(coordinateReadyToRemove.X == -1) {
@@ -239,7 +240,6 @@ namespace BranchAndBound
             TSPMatrix[coordinateReadyToRemove.Y, coordinateReadyToRemove.X] = float.PositiveInfinity;
             coordinateReadyToRemove = new Point(-1, -1);
         }
-
         List<Point> GetIndex(float[,] matrix, float value) {
             List<Point> points = new List<Point>();
             for(int y = 0; y < matrix.GetLength(1); y++)
@@ -248,23 +248,6 @@ namespace BranchAndBound
             return points;
 
         }
-        float GetSumOfMinimumValue(float[,] matrix, int x, int y) {
-            return
-                Enumerable.Range(0, matrix.GetLength(0))
-                                    .Select(
-                                        _x => matrix[_x, y]
-                ).Where(_x => x != _x).Min()
-                +
-                Enumerable.Range(0, matrix.GetLength(1))
-                                    .Select(
-                                        _y => matrix[x, _y]
-                ).Where(_y => y != _y).Min();
-
-        }
-        float GetSumOfMinimumValue(float[,] matrix, Point p) {
-            return GetSumOfMinimumValue(matrix, p.X, p.Y);
-        }
-
         Tuple<float, float> GetMinimumValue(float[,] matrix, int x, int y) {
             return new Tuple<float, float>(
                 Enumerable.Range(0, matrix.GetLength(0))
@@ -279,7 +262,6 @@ namespace BranchAndBound
                     _y => matrix[x, _y]
                 ).Min()
             );
-
         }
         Tuple<float, float> GetMinimumValue(float[,] matrix, Point p) {
             return GetMinimumValue(matrix, p.X, p.Y);
