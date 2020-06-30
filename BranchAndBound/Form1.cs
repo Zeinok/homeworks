@@ -35,7 +35,7 @@ namespace BranchAndBound
         Dictionary<int, int> solution = new Dictionary<int, int>();
         CurrentStatus currentStatus = CurrentStatus.LoopStart;
         Point coordinateReadyToRemove = new Point(-1, -1);
-
+        bool noSolution = false;
         private void toolStripButtonOpen_Click(object sender, EventArgs e) {
             var ofd = new OpenFileDialog();
             if(ofd.ShowDialog() != DialogResult.OK) return;
@@ -135,16 +135,44 @@ namespace BranchAndBound
                         if(float.IsInfinity(TSPMatrix[x, y]))
                             continue;
                     var sSize = g.MeasureString(TSPMatrix[x, y].ToString(), cellFont);
+                    var brush = Brushes.Black;
+                    if(coordinateReadyToRemove.X == x && coordinateReadyToRemove.Y == y)
+                        brush = Brushes.Red;
                     g.DrawString(
                         TSPMatrix[x, y].ToString(),
                         cellFont,
-                        Brushes.Black,
+                        brush,
                         x * cellSizeF + cellSizeF / 2 - sSize.Width / 2,
                         y * cellSizeF + cellSizeF / 2 - sSize.Height / 2
                         );
                 }
             }
-
+            if(currentStatus == CurrentStatus.FindLowestBound) {
+                for(int x = 0; x < TSPMatrix.GetLength(0); x++) {
+                    if(xLowestBound[x] == 0 || float.IsInfinity(xLowestBound[x]))
+                        continue;
+                    var sSize = g.MeasureString(xLowestBound[x].ToString(), cellFont);
+                    g.DrawString(
+                        xLowestBound[x].ToString(),
+                        cellFont,
+                        Brushes.Red,
+                        x * cellSizeF + cellSizeF / 2 - sSize.Width / 2,
+                        TSPMatrix.GetLength(1) * cellSizeF + cellSizeF / 2 - sSize.Height / 2
+                        );
+                }
+                for(int y = 0; y < TSPMatrix.GetLength(0); y++) {
+                    if(yLowestBound[y] == 0 || float.IsInfinity(yLowestBound[y]))
+                        continue;
+                    var sSize = g.MeasureString(yLowestBound[y].ToString(), cellFont);
+                    g.DrawString(
+                        yLowestBound[y].ToString(),
+                        cellFont,
+                        Brushes.Red,
+                        TSPMatrix.GetLength(0) * cellSizeF + cellSizeF / 2 - sSize.Width / 2,
+                        y * cellSizeF + cellSizeF / 2 - sSize.Height / 2
+                        );
+                }
+            }
             pictureBox1.Image = new Bitmap(bmp);
             bmp.Dispose();
         }
@@ -212,7 +240,8 @@ namespace BranchAndBound
                 if(float.IsInfinity(result.Item1) || float.IsInfinity(result.Item2)) {
                     appendLog(string.Format("No solution on ({0},{1})", t.X, t.Y));
                     if(!solution.ContainsKey(t.X)) solution.Add(t.X, t.Y);
-                    TSPMatrix[t.X, t.Y] = float.PositiveInfinity;
+                    coordinateReadyToRemove = new Point(t.X, t.Y);
+                    noSolution = true;
                     maxCoord = new Point(-1, -1);
                     break;
                 }
@@ -223,10 +252,17 @@ namespace BranchAndBound
                     maxCoord = t;
                 }
             }
-            if(maxCoord.X != -1)
-                coordinateReadyToRemove = maxCoord;
+            if(maxCoord.X == -1) return;
+            coordinateReadyToRemove = maxCoord;
         }
         private void MakeColRowInfinite() {
+            if(noSolution) {
+                var t = coordinateReadyToRemove;
+                TSPMatrix[t.X, t.Y] = float.PositiveInfinity;
+                noSolution = false;
+                coordinateReadyToRemove = new Point(-1, -1);
+                return;
+            }
             if(coordinateReadyToRemove.X == -1) {
                 return;
             }
